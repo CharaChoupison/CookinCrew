@@ -9,7 +9,7 @@
     // Créer une instance du routeur
     $router = new AltoRouter();
 
-    // Définir le chemin de base
+    // Définir le chemin de basedz
     $router->setBasePath('/ilecmvc');
 
 
