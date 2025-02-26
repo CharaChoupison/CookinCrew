@@ -2,34 +2,26 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Inscription</title>
+  <title>Connexion</title>
   <link rel="stylesheet" href="views/style/style.css"></style>
 </head>
 <body>
   <div class="form-container">
-    <h1>Inscription</h1>
+    <h1>Connexion</h1>
     <form method="POST" action="">
       <!-- Champ mail -->
       <div class="form-group">
-        <label for="email">Votre mail :</label>
+        <label for="mail">Mail :</label>
         <input
           type="email"
-          name="mail"
-          id="mail"
+          name="email"
+          id="email"
           required
         />
       </div>
 
       <!-- Champ nom d'utilisateur -->
-      <div class="form-group">
-        <label for="username">Nom d'utilisateur :</label>
-        <input
-          type="text"
-          name="username"
-          id="username"
-          required
-        />
-      </div>
+     
 
       <!-- Champ mot de passe -->
       <div class="form-group">
@@ -42,17 +34,16 @@
         />
       </div>
 
-      <!-- Boutons / liens -->
+      <!-- Boutons -->
       <div class="form-actions">
-        <button type="submit" class="btn">
-          S'inscrire
-        </button>
-        <!-- Par exemple, un lien de retour vers connexion -->
-        <a href="connexion" class="link">
-          Se connecter
-        </a>
+        <button type="submit" class="btn">Connexion</button>
+        <a href="inscription" class="link">S'inscrire</a>
       </div>
     </form>
   </div>
+  {% if error is defined %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+
 </body>
 </html>

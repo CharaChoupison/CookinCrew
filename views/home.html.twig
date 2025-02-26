@@ -14,5 +14,11 @@
             <li>{{fruit}}</li>
         {% endfor %}
     </ul>
+    {% if username is not null %}
+        <a href="/CookinCrew/deconnexion" class="btn btn-danger">Déconnexion</a>
+    {% else %}
+        <a href="connexion">connexion</a>
+    {% endif %}
+    <p>{{username}}</p>
 </body>
 </html>

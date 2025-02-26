@@ -17,7 +17,9 @@ class HomeController extends Controller
             "title" => "Page d'accueil",
             "h1" => "Bienvenue",
             "content" => "Ceci est la page d'accueil.",
-            "fruits"=>["pommes","fraise"]
+            "mail" => $_SESSION["email"] ?? null,
+            "username"=> $_SESSION["username"] ?? null,
+
         ];
 
         $this->render("home.html.twig", $data);

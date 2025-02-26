@@ -6,6 +6,10 @@
     <title>{{h1}}</title>
 </head>
 <body>
-    <p>{{username}}</p>
+{% if username is defined %}
+    <p>{{ username }}</p>
+  {% else %}
+    <a href="connexion">connexion</a>
+{% endif %}
 </body>
 </html>

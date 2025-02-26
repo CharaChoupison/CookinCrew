@@ -18,10 +18,10 @@ class UserModel extends Model
      * @param string $password
      * @return int|null L'ID de l'utilisateur créé ou null en cas d'échec.
      */
-    public function get_user_by_mail(string $mail,bool $fetchAsObject = true){
+    public function get_user_by_mail(string $email,bool $fetchAsObject = true){
 
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE mail = :mail");
-        $stmt->execute([':mail' => $mail]);
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE email = :email");
+        $stmt->execute([':email' => $email]);
         return $fetchAsObject ? $stmt->fetch(PDO::FETCH_OBJ) : $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -38,18 +38,17 @@ class UserModel extends Model
         // Hashage du mot de passe avant l'insertion
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        return $this->create(['username', 'mail', 'pass'], $username, $email, $hashedPassword);
+        return $this->create(['username', 'email', 'password'], $username, $email, $hashedPassword);
     }
 
-    public function connection(string $email, string $password): ?int
+    public function connexion(string $email, string $password): ?int
     {   
-        
-       $user = $this->get_user_by_mail($email,true);
-       ;
-       if(password_verify($password, $user->pass) ){
-        return 1;
-       }else{
-        return 0;
-       }
+        $user = $this->get_user_by_mail($email, true);
+
+        if ($user && password_verify($password, $user->password)) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }

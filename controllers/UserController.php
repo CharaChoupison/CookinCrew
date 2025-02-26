@@ -10,11 +10,12 @@ class UserController extends Controller
     public function index()
     {
         $data = [
-            "title" => "Connection",
-            "h1" => "Connection",
+            "title" => "connexion",
+            "h1" => "connexion",
+            "error" => $_SESSION['error'] ?? null,  // si tu veux afficher l’erreur
         ];
-
-        $this->render("connection.html.twig", $data);
+        $this->render("connexion.html.twig", $data);
+        
     }
 
     /**
@@ -24,8 +25,8 @@ class UserController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'] ?? '';
-            $email = $_POST['mail'] ?? '';
-            $password = $_POST['pass'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $password = $_POST['password'] ?? '';
 
             if (!empty($username) && !empty($email) && !empty($password)) {
                 try {
@@ -35,9 +36,9 @@ class UserController extends Controller
                     if ($issuccess) {
                         $id = $userModel->get_last_id();
                         $user = $userModel->get_user_by_id($id);
-                        $_SESSION["mail"] = $user->mail;
+                        $_SESSION["email"] = $user->email;
                         $_SESSION["username"] = $user->username;
-                        header('Location: /ilecmvc/admin');
+                        header('Location: /CookinCrew/home');
                         exit;
                     } else {
                         $error = 'Impossible de créer l\'utilisateur.';
@@ -56,14 +57,14 @@ class UserController extends Controller
     }
 
 
-    public function connection(){
+    public function connexion(){
 
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') 
         {
            
-            $email = $_POST['mail'] ?? '';
-            $password = $_POST['pass'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $password = $_POST['password'] ?? '';
             
            
            $userModel =  new UserModel($this->db);
@@ -71,32 +72,44 @@ class UserController extends Controller
             if(!empty($email) && !empty($password)){
                  try{
 
-                    $connected = $userModel->connection($email,$password);
+                    $connected = $userModel->connexion($email,$password);
                    
                     if($connected == 1){
                         
                         $user = $userModel->get_user_by_mail($email);
-                        $_SESSION["mail"] = $user->mail;
+                        $_SESSION["email"] = $user->mail;
                         $_SESSION["username"] = $user->username;
-                        header('Location: /ilecmvc/admin');
+                        header('Location: /CookinCrew/');
                     }
-                    else{
-                        
-                        header('Location: /ilecmvc/connection');
-                    }
+                    else {
+                      $_SESSION['error'] = 'Email ou mot de passe incorrect';
+                      header('Location: /CookinCrew/connexion');
+                  }
+                  
 
                  }catch(\PDOException $e){
                         $userModel = new UserModel($this->db);
                  }
+            }   else{
+                $error = 'Tous les champs sont obligatoires.';
+                
             }
         }
-        
-
     }
+
+    public function logout() {
+        // 1. Détruire la session
+        session_destroy();
+
+        // 2. Rediriger vers l'accueil
+        header('Location: /CookinCrew/'); 
+        exit;
+    }
+
     public function admin(){
 
         $data = [
-            "mail" => $_SESSION["mail"],
+            "mail" => $_SESSION["email"],
             "username"=> $_SESSION["username"],
             "h1" => "Admin",
         ];
