@@ -1,0 +1,98 @@
+stages:
+  - validate-front
+  - validate-back
+  - deploy
+  - generate-preview-url
+
+php-lint:
+  stage: validate-back
+  image: php:8.1-cli
+  script:
+    - find . -type f -name "*.php" -exec php -l {} \;
+  tags:
+    - ci
+  only:
+    - main
+  allow_failure: false
+
+phpstan:
+  stage: validate-back
+  image: php:8.1-cli
+  script:
+    - curl -L https://github.com/phpstan/phpstan/releases/latest/download/phpstan.phar -o phpstan.phar
+    - chmod +x phpstan.phar
+    - ./phpstan.phar analyse --level=max src/ || true
+  tags:
+    - ci
+  only:
+    - main
+  allow_failure: true
+
+css-lint:
+  stage: validate-front
+  image: node:18
+  script:
+    - npx stylelint "**/*.css" || true
+  tags:
+    - ci
+  only:
+    - main
+  allow_failure: true
+
+js-lint:
+  stage: validate-front
+  image: node:18
+  script:
+    - npx eslint "**/*.js" || true
+  tags:
+    - ci
+  only:
+    - main
+  allow_failure: true
+
+deploy:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache lftp jq
+  script:
+    - chmod +x deploy.sh
+    - ./deploy.sh
+  tags:
+    - ci
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+
+update-badge:
+  stage: generate-preview-url
+  image: alpine:latest
+  before_script:
+    - apk update
+    - apk add --no-cache curl jq
+  script: |
+    PREVIEW_URL="https://preview.maelcorp.com/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}/"
+    echo "🔗 PREVIEW_URL = $PREVIEW_URL"
+    badges_json=$(curl --silent --header "PRIVATE-TOKEN: ${GITLAB_API_TOKEN_PREVIEW}" \
+         "https://konoha.maelcorp.com/api/v4/projects/${CI_PROJECT_ID}/badges")
+    badge_id=$(echo "$badges_json" | jq '.[] | select(.name == "Preview") | .id')
+    if [ -n "$badge_id" ] && [ "$badge_id" != "null" ]; then
+      curl --request PUT \
+           --header "PRIVATE-TOKEN: ${GITLAB_API_TOKEN_PREVIEW}" \
+           --data "name=Preview" \
+           --data "link_url=${PREVIEW_URL}" \
+           --data "image_url=https://img.shields.io/badge/Preview-Available-green" \
+           "https://konoha.maelcorp.com/api/v4/projects/${CI_PROJECT_ID}/badges/${badge_id}"
+    else
+      curl --request POST \
+           --header "PRIVATE-TOKEN: ${GITLAB_API_TOKEN_PREVIEW}" \
+           --data "name=Preview" \
+           --data "link_url=${PREVIEW_URL}" \
+           --data "image_url=https://img.shields.io/badge/Preview-Available-green" \
+           "https://konoha.maelcorp.com/api/v4/projects/${CI_PROJECT_ID}/badges"
+    fi
+  tags:
+    - ci
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
