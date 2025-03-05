@@ -2,14 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{h1}}</title>
+    <title>Admin</title>
 </head>
 <body>
-{% if username is defined %}
-    <p>{{ username }}</p>
-  {% else %}
-    <a href="connexion">connexion</a>
-{% endif %}
+    <h1>Page Admin</h1>
+    <p>Mail : {{ mail }}</p>
+    <p>Username : {{ username }}</p>
 </body>
 </html>

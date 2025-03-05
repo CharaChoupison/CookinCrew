@@ -1,44 +1,41 @@
 <?php
 namespace Controllers;
+
 use Models\UserModel;
 
 class UserController extends Controller
 {
-    /**
-     * Afficher la page de connexion.
-     */
     public function index()
     {
-        $data = [
-            "title" => "connexion",
-            "h1" => "connexion",
-            "error" => $_SESSION['error'] ?? null,  // si tu veux afficher l’erreur
-        ];
-        $this->render("connexion.html.twig", $data);
-        
+        // Affichage du formulaire de connexion
+        $this->render("connexion.html.twig", [
+            'title' => 'Connexion',
+            'h1'    => 'Connexion',
+            // error si tu veux afficher une erreur récupérée en session, etc.
+        ]);
     }
 
-    /**
-     * Afficher le formulaire d'inscription et traiter l'inscription.
-     */
     public function inscription()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'] ?? '';
-            $email = $_POST['email'] ?? '';
-            $password = $_POST['password'] ?? '';
+            $email    = $_POST['mail'] ?? '';
+            $password = $_POST['pass'] ?? '';
 
             if (!empty($username) && !empty($email) && !empty($password)) {
                 try {
                     $userModel = new UserModel($this->db);
-                    $issuccess = $userModel->register($username, $email, $password);
+                    $insertId  = $userModel->register($username, $email, $password);
 
-                    if ($issuccess) {
-                        $id = $userModel->get_last_id();
-                        $user = $userModel->get_user_by_id($id);
-                        $_SESSION["email"] = $user->email;
-                        $_SESSION["username"] = $user->username;
-                        header('Location: /CookinCrew/home');
+                    if ($insertId) {
+                        // Récupération de l'utilisateur
+                        $user = $userModel->get_user_by_id($insertId);
+                        $_SESSION['user_id']  = $user->id;
+                        $_SESSION['username'] = $user->username;
+                        $_SESSION['mail']     = $user->email;
+
+                        // Redirection vers l'accueil
+                        header('Location: /CookinCrew/');
                         exit;
                     } else {
                         $error = 'Impossible de créer l\'utilisateur.';
@@ -56,65 +53,62 @@ class UserController extends Controller
         ]);
     }
 
+    public function connexion()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $email    = $_POST['mail'] ?? '';
+        $password = $_POST['pass'] ?? '';
 
-    public function connexion(){
+        if (!empty($email) && !empty($password)) {
+            $userModel = new UserModel($this->db);
+            $connected = $userModel->connexion($email, $password);
 
-        
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') 
-        {
-           
-            $email = $_POST['email'] ?? '';
-            $password = $_POST['password'] ?? '';
-            
-           
-           $userModel =  new UserModel($this->db);
-           
-            if(!empty($email) && !empty($password)){
-                 try{
+            if ($connected) {
+                // Succès => On charge l'user pour récupérer son ID, etc.
+                $user = $userModel->get_user_by_mail($email);
+                $_SESSION['user_id']  = $user->id;
+                $_SESSION['username'] = $user->username;
+                $_SESSION['mail']     = $user->email;
 
-                    $connected = $userModel->connexion($email,$password);
-                   
-                    if($connected == 1){
-                        
-                        $user = $userModel->get_user_by_mail($email);
-                        $_SESSION["email"] = $user->mail;
-                        $_SESSION["username"] = $user->username;
-                        header('Location: /CookinCrew/');
-                    }
-                    else {
-                      $_SESSION['error'] = 'Email ou mot de passe incorrect';
-                      header('Location: /CookinCrew/connexion');
-                  }
-                  
-
-                 }catch(\PDOException $e){
-                        $userModel = new UserModel($this->db);
-                 }
-            }   else{
-                $error = 'Tous les champs sont obligatoires.';
-                
+                header('Location: /CookinCrew/');
+                exit;
+            } else {
+                // Erreur => On prépare un message
+                $error = 'Identifiants incorrects.';
             }
         }
     }
 
-    public function logout() {
-        // 1. Détruire la session
-        session_destroy();
+    // On rend la vue (si GET ou si on a eu un échec)
+    $this->render('connexion.html.twig', [
+        'title' => 'Connexion',
+        'h1'    => 'Connexion',
+        'error' => $error ?? null,
+    ]);
+}
 
-        // 2. Rediriger vers l'accueil
-        header('Location: /CookinCrew/'); 
-        exit;
-    }
 
-    public function admin(){
+    public function admin()
+    {
+        // Sécuriser l'accès admin
+        if (empty($_SESSION['user_id'])) {
+            header('Location: /CookinCrew/connexion');
+            exit;
+        }
 
         $data = [
-            "mail" => $_SESSION["email"],
-            "username"=> $_SESSION["username"],
-            "h1" => "Admin",
+            'mail'     => $_SESSION['mail'] ?? '',
+            'username' => $_SESSION['username'] ?? '',
+            'h1'       => 'Admin'
         ];
 
+        $this->render("admin.html.twig", $data);
+    }
 
-        $this->render("admin.html.twig",$data);
+    public function logout()
+    {
+        session_destroy();
+        header('Location: /CookinCrew/');
+        exit;
     }
 }

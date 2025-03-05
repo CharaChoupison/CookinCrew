@@ -1,30 +1,35 @@
 <?php
-// Au début de index.php (juste après <?php)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
+
 require 'vendor/autoload.php';
 
 use Controllers\HomeController;
 use Controllers\UserController;
+use Controllers\MessageController;
 use Database\Database;
 
 $router = new AltoRouter();
 
-// Chemin de base (dossier du projet), à adapter selon ta config
+// Si ton projet est dans "http://localhost:8888/CookinCrew/",
 $router->setBasePath('/CookinCrew');
 
-/** ROUTES **/
-// Page d’accueil
+/** 
+ * ROUTES
+ */
+// 1) Accueil (GET + POST) sur "/"
 $router->map('GET', '/', function () {
     $db = Database::getInstance();
     $homeController = new HomeController($db);
-    $homeController->index();
-}); 
+    $homeController->index(); // Gère le listing ET le formulaire
+});
 
-// INSCRIPTION : GET (affiche formulaire), POST (traite formulaire)
+$router->map('POST', '/', function () {
+    $db = Database::getInstance();
+    $homeController = new HomeController($db);
+    $homeController->index(); // Gère la création du message en POST
+});
+
+// 2) INSCRIPTION
 $router->map('GET', '/inscription', function () {
     $db = Database::getInstance();
     $userController = new UserController($db);
@@ -36,45 +41,45 @@ $router->map('POST', '/inscription', function () {
     $userController->inscription();
 });
 
-// CONNEXION : GET (affiche formulaire), POST (traite formulaire)
+// 3) CONNEXION
 $router->map('GET', '/connexion', function () {
     $db = Database::getInstance();
     $userController = new UserController($db);
-    // Montre la page de connexion (ex: methode showconnexionForm ou index)
-    $userController->index(); // ou $userController->showconnexionForm();
+    $userController->index();
 });
 $router->map('POST', '/connexion', function () {
     $db = Database::getInstance();
     $userController = new UserController($db);
-    // Traite les données du formulaire (methode connexion)
     $userController->connexion();
 });
 
-// DECONNEXION
-$router->map('GET', '/deconnexion', function () {
-    $db = Database::getInstance();
-    $userController = new UserController($db);
-    $userController->logout();
-});
-
-// ADMIN (juste en GET pour l’exemple)
-$router->map('GET', '/home', function () {
-    $db = Database::getInstance();
-    $userController = new UserController($db);
-    $userController->home();
-});
-
-
-// ADMIN (juste en GET pour l’exemple)
+// 4) ADMIN
 $router->map('GET', '/admin', function () {
     $db = Database::getInstance();
     $userController = new UserController($db);
     $userController->admin();
 });
 
-/** MATCHER LA ROUTE **/
-$match = $router->match();
+// 5) DECONNEXION
+$router->map('GET', '/deconnexion', function(){
+    $db = Database::getInstance();
+    $userController = new UserController($db);
+    $userController->logout();
+});
 
+// 6) MESSAGES : liste (optionnel, si tu veux /messages)
+$router->map('GET', '/messages', function(){
+    $db = Database::getInstance();
+    $msgController = new MessageController($db);
+    $msgController->index();
+});
+
+// 7) ICI, on N'A PAS /messages/create, car tout se fait depuis "/"
+
+/** 
+ * MATCHER
+ */
+$match = $router->match();
 if (is_array($match) && is_callable($match['target'])) {
     call_user_func_array($match['target'], $match['params']);
 } else {

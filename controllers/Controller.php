@@ -1,53 +1,24 @@
 <?php
-
 namespace Controllers;
 
-use PDO;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
+use Database\Database;
 
 class Controller
 {
-    protected Environment $twig;
-    protected PDO $db;
+    protected $db;
+    protected $twig;
 
-    public function __construct(PDO $database)
+    public function __construct($db)
     {
-        $this->db = $database;
+        $this->db = $db;
 
-        // Initialisation de Twig
-        $loader = new FilesystemLoader(__DIR__ . '/../views');
-        $this->twig = new Environment($loader, [
-            'debug' => true, // Active le mode debug
-            'cache' => false, // Désactive le cache pendant le développement
-        ]);
+        // Initialisation de Twig, en pointant vers le dossier "views"
+        $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../views');
+        $this->twig = new \Twig\Environment($loader);
     }
 
-    public function render(string $template, array $data = [])
+    protected function render(string $template, array $data = [])
     {
-        try {
-            echo $this->twig->render($template, $data);
-        } catch (\Twig\Error\Error $e) {
-            echo "Error rendering template: " . $e->getMessage();
-            error_log($e->getMessage());
-        }
+        echo $this->twig->render($template, $data);
     }
-
-    
-    public function setSession(string $key, $value): void
-    {
-        $_SESSION[$key] = $value;
-    }
-
-    public function getSession(string $key, $default = null)
-    {
-        return $_SESSION[$key] ?? $default;
-    }
-
-    public function deleteSession(string $key): void
-    {
-        unset($_SESSION[$key]);
-    }
-
-
 }

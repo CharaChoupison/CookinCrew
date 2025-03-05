@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer un message</title>
+</head>
+<body>
+    <h1>Créer un message</h1>
+
+    {% if error %}
+        <div style="color:red;">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="" enctype="multipart/form-data">
+        <div>
+            <label for="titre">Titre :</label>
+            <input type="text" name="titre" id="titre" required>
+        </div>
+        <div>
+            <label for="description">Description :</label>
+            <textarea name="description" id="description" required></textarea>
+        </div>
+        <div>
+            <label for="image">Image (optionnelle) :</label>
+            <input type="file" name="image" id="image" accept="image/*">
+        </div>
+        <button type="submit">Publier</button>
+    </form>
+</body>
+</html>
