@@ -20,7 +20,7 @@ class UserController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'] ?? '';
             $email    = $_POST['mail'] ?? '';
-            $password = $_POST['pass'] ?? '';
+            $password = $_POST['password'] ?? '';
 
             if (!empty($username) && !empty($email) && !empty($password)) {
                 try {
@@ -57,7 +57,7 @@ class UserController extends Controller
 {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email    = $_POST['mail'] ?? '';
-        $password = $_POST['pass'] ?? '';
+        $password = $_POST['password'] ?? '';
 
         if (!empty($email) && !empty($password)) {
             $userModel = new UserModel($this->db);

@@ -1,97 +1,102 @@
 /* --- Reset / Base --- */
+:root {
+  --primary-color: #fe4503;
+  --font-color: #3f3e3d;
+}
+
 * {
-    margin: 0; 
-    padding: 0;
-    box-sizing: border-box;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #FAF5F0; /* Couleur de fond globale */
-    color: #444;
-    display: flex;             /* Permet le centrage horizontal/vertical */
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;         /* Hauteur minimum pour occuper tout l'écran */
-  }
+body {
+  font-family: Arial, sans-serif;
+  background-color: #faf5f0; /* Couleur de fond globale */
+  color: #3f3e3d;
+  display: flex; /* Permet le centrage horizontal/vertical */
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Hauteur minimum pour occuper tout l'écran */
+}
 
-  /* --- Conteneur principal (carte/formulaire) --- */
-  .form-container {
-    background-color: #fff;    /* Fond blanc pour se détacher du fond global */
-    width: 360px;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Légère ombre */
-  }
+/* --- Conteneur principal (carte/formulaire) --- */
+.form-container {
+  background-color: #fff; /* Fond blanc pour se détacher du fond global */
+  width: 360px;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Légère ombre */
+}
 
-  /* --- Titre --- */
-  .form-container h1 {
-    font-size: 1.5rem;
-    margin-bottom: 16px;
-    text-align: center;
-    color: #FE4503; /* Couleur principale */
-  }
+/* --- Titre --- */
+.form-container h1 {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  text-align: center;
+  color: #fe4503; /* Couleur principale */
+}
 
-  /* --- Formulaire --- */
-  form {
-    display: flex;
-    flex-direction: column; /* Empile les champs en vertical */
-    gap: 16px;             /* Espacement entre les champs */
-  }
+/* --- Formulaire --- */
+form {
+  display: flex;
+  flex-direction: column; /* Empile les champs en vertical */
+  gap: 16px; /* Espacement entre les champs */
+}
 
-  /* --- Groupes de champs (label + input) --- */
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
+/* --- Groupes de champs (label + input) --- */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
-  .form-group label {
-    font-weight: 600;
-  }
+.form-group label {
+  font-weight: 600;
+}
 
-  .form-group input {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
+.form-group input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+}
 
-  .form-group input:focus {
-    border-color: #FE4503;
-  }
+.form-group input:focus {
+  border-color: #fe4503;
+}
 
-  /* --- Bouton de connexion --- */
-  .btn {
-    cursor: pointer;
-    background-color: #FE4503;
-    color: #fff;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-  }
+/* --- Bouton de connexion --- */
+.btn {
+  cursor: pointer;
+  background-color: #fe4503;
+  color: #fff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
 
-  .btn:hover {
-    background-color: #e03e02; /* Légèrement plus foncé au survol */
-  }
+.btn:hover {
+  background-color: #e03e02; /* Légèrement plus foncé au survol */
+}
 
-  /* --- Lien d'inscription --- */
-  .link {
-    color: #FE4503;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s;
-  }
+/* --- Lien d'inscription --- */
+.link {
+  color: #fe4503;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
 
-  .link:hover {
-    text-decoration: underline;
-  }
+.link:hover {
+  text-decoration: underline;
+}
 
-  /* --- Zone des actions (bouton + lien) --- */
-  .form-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+/* --- Zone des actions (bouton + lien) --- */
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

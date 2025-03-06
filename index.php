@@ -67,15 +67,6 @@ $router->map('GET', '/deconnexion', function(){
     $userController->logout();
 });
 
-// 6) MESSAGES : liste (optionnel, si tu veux /messages)
-$router->map('GET', '/messages', function(){
-    $db = Database::getInstance();
-    $msgController = new MessageController($db);
-    $msgController->index();
-});
-
-// 7) ICI, on N'A PAS /messages/create, car tout se fait depuis "/"
-
 /** 
  * MATCHER
  */

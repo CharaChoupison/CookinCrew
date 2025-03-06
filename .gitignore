@@ -1,2 +1,4 @@
 vendor/
 database/*.sql
+uploads/posts/*
+uploads/avatar/*

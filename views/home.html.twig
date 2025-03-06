@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
-  {# <link rel="stylesheet" href="views/style/style.css"></style> #}
+    <script src="https://kit.fontawesome.com/9ef86456d2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="views/style/home.css"></style>
 </head>
 <body>
     <div class="container">
@@ -22,43 +23,52 @@
                 <p>Connecté en tant que <strong>{{ username }}</strong>.</p>
 
                 <h2>Poster un nouveau message</h2>
-                <form class="messageContainer" method="POST" action="" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="titre" class="form-label">Titre :</label>
-                        <input type="text" name="titre" id="titre" required class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description :</label>
-                        <textarea name="description" id="description" required class="form-control"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="image" class="form-label">Image (optionnelle) :</label>
-                        <input type="file" name="image" id="image" accept="image/*" class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Publier</button>
-                </form>
+                <section class="post-section">
+                    <form class="messageContainer" method="POST" action="" enctype="multipart/form-data">
+                        <input type="text" name="titre" id="titre" required class="post post-title" placeholder="Titre"></input>
+                        <input name="description" id="description" required class="post post-title" placeholder="Recette"></input>
+                        <div class="post-footer">
+                            <label for="image" style="cursor: pointer;">
+                                <i class="image-post-icon fa-solid fa-image"></i>
+                            </label>
+                            <!-- L'input est masqué -->
+                            <input type="file" name="image" id="image" accept="image/*" style="display: none;">
+                            <button type="submit" class="post-btn">Publier</button>
+                        </div>
+                    </form>
             {% else %}
                 <p>Vous n'êtes pas connecté. <a href="/CookinCrew/connexion">Connectez-vous</a> pour poster un message.</p>
             {% endif %}
+                {% if messages|length > 0 %}
+                <ul class="message-list">
+                {% for msg in messages %}
+                    <li class="message-card">
+                        <div class="header-post">
+                            <p>{{ msg.username }}&nbsp;</p>   
+                            <small>-&nbsp;{{ msg.date_poste }}</small>
+                        </div>
+                        <div class="left-post">
+                            <h3>{{ msg.titre }}</h3>
+                            <p>{{ msg.description }}</p>
+                        </div>
+                        {% if msg.image %}
+                            <div class="right-post">
+                                <img class='post-img' src="/CookinCrew/{{ msg.image }}" alt="Image message">
+                            </div>
+                        {% endif %}
+                        <div class="footer-post">
+                        <i class="fa-regular fa-heart"></i>
+                        <i class="fa-regular fa-comments"></i>
+                        <i class="fa-solid fa-share"></i>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+                {% else %}
+                    <p>Aucun message pour le moment.</p>
+                {% endif %}
+            </section>
         </div>
-
-        <h2>Liste des messages</h2>
-        {% if messages|length > 0 %}
-            <ul>
-            {% for msg in messages %}
-                <li>
-                    <h3>{{ msg.titre }}</h3>
-                    <p>{{ msg.description }}</p>
-                    {% if msg.image %}
-                        <img src="/CookinCrew/{{ msg.image }}" alt="Image message" width="200">
-                    {% endif %}
-                    <small>Posté le {{ msg.date_poste }}</small>
-                </li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>Aucun message pour le moment.</p>
-        {% endif %}
     </div>
 </body>
 </html>

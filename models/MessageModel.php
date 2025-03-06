@@ -30,8 +30,10 @@ class MessageModel extends Model
     public function getAllMessages(): array
     {
         $stmt = $this->db->query("
-            SELECT * FROM {$this->table}
-            ORDER BY date_poste DESC
+            SELECT m.*, u.username
+            FROM {$this->table} m
+            JOIN users u ON m.utilisateur_id = u.id
+            ORDER BY m.date_poste DESC
         ");
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }

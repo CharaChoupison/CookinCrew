@@ -9,11 +9,9 @@ class HomeController extends Controller
     {
         $messageModel = new MessageModel($this->db);
 
-        // 1. Vérifier si on est en POST => quelqu'un a soumis le formulaire de création
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Vérifier si l'utilisateur est connecté
+            // Vérifier que l’utilisateur est connecté (facultatif selon ton besoin)
             if (empty($_SESSION['user_id'])) {
-                // Redirige pour éviter la création sans être connecté
                 header('Location: /CookinCrew/connexion');
                 exit;
             }
@@ -24,31 +22,32 @@ class HomeController extends Controller
             $userId      = $_SESSION['user_id'];
             $imagePath   = null;
 
-            // Gérer l'upload (si champ 'image' existe)
+            // Gestion upload
             if (!empty($_FILES['image']['name'])) {
                 $fileName   = time() . '_' . basename($_FILES['image']['name']);
-                $targetDir  = __DIR__ . '/../../public/uploads/';
-
-                // Crée le dossier s'il n'existe pas
+                // Dossier "uploads" dans CookinCrew/
+                $targetDir  = __DIR__ . '/../uploads/posts/';
                 if (!is_dir($targetDir)) {
                     mkdir($targetDir, 0777, true);
                 }
-
                 $targetFile = $targetDir . $fileName;
+
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                    $imagePath = 'uploads/' . $fileName;
+                    $imagePath = 'uploads/posts/' . $fileName;
                 }
             }
 
             // Insertion en base
             $newId = $messageModel->createMessage($userId, $titre, $description, $imagePath);
 
-            // On redirige pour rafraîchir la page
-            header('Location: /CookinCrew/');
-            exit;
+            // Rediriger pour éviter de re-soumettre le formulaire en cas de refresh
+            if ($newId) {
+                header('Location: /CookinCrew/');
+                exit;
+            }
         }
 
-        // 2. Sinon (GET), on affiche la page d'accueil
+        // Si GET ou après redirection, on affiche la liste
         $allMessages = $messageModel->getAllMessages();
 
         $this->render('home.html.twig', [
