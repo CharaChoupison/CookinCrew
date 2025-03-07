@@ -51,8 +51,8 @@ class HomeController extends Controller
         $allMessages = $messageModel->getAllMessages();
 
         $this->render('home.html.twig', [
-            'title'       => 'Accueil',
-            'h1'          => 'Bienvenue sur CookinCrew',
+            'title'       => 'CookinCrew',
+            'h1'          => 'CookinCrew',
             'messages'    => $allMessages,
             'isConnected' => !empty($_SESSION['user_id']),
             'username'    => $_SESSION['username'] ?? null

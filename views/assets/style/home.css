@@ -1,3 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
 :root {
   --primary-color: rgb(254, 69, 3);
   --primary-color-opacity: rgba(255, 68, 0, 0.4);
@@ -14,27 +44,59 @@
 
 body {
   background-color: var(--background-color);
+  font-family: "Montserrat", sans-serif;
 }
 
-.post-section {
+a {
+  text-decoration: none;
+  color: var(--font-color);
+} /* --- Header --- */
+
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+/* --- nav --- */
+
+.nav-container {
+  width: 25vw;
+}
+
+.side-nav {
+  position: fixed;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  width: 100vw;
-  margin: auto;
-  width: 75vw;
+  justify-content: space-between;
+  width: 25vw;
+  height: 100vh;
 }
+
+.menu-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Message section --- */
 
 .messageContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: white;
-  width: 75vw;
+  width: 50vw;
   margin: auto;
   border: solid 1px var(--primary-color-opacity);
   border-radius: 16px;
   padding: 5px;
+}
+
+.post-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: auto;
+  width: 50vw;
 }
 
 .post {
@@ -65,14 +127,14 @@ body {
 }
 
 .image-post-icon {
-  color: #fe4503;
+  color: var(--primary-color);
   padding: 10px;
   border-radius: 50px;
   transition: ease-in-out 0.2s;
 }
 
 .image-post-icon:hover {
-  background-color: #fe450345;
+  background-color: var(--primary-color-opacity);
 }
 
 /* --- Liste des messages --- */
@@ -82,7 +144,6 @@ body {
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
   justify-content: center;
   flex-direction: column;
   width: 100%;
@@ -96,8 +157,8 @@ body {
   grid-auto-rows: minmax(100px, auto);
   flex-direction: row;
   background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-bottom: solid 0.2px var(--primary-color-opacity);
+
   padding: 15px;
   width: 100%;
   transition: transform 0.2s ease-in-out;
@@ -152,6 +213,14 @@ body {
 .message-card .footer-post {
   grid-column: 1 / 4;
   grid-row: 3;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.footer-post i {
+  margin-left: 10px;
 }
 
 /* .message-card:hover {

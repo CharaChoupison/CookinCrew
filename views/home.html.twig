@@ -4,25 +4,33 @@
     <meta charset="UTF-8">
     <title>{{ title }}</title>
     <script src="https://kit.fontawesome.com/9ef86456d2.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="views/style/home.css"></style>
+    <link rel="stylesheet" href="views/assets/style/home.css"></style>
+    <link rel="icon" type="image/x-icon" href="views/assets/img/favicon.ico">
 </head>
-<body>
+<body class="home">
     <div class="container">
-        <h1>{{ h1 }}</h1>
-
-        <nav>
-            <a href="/CookinCrew/">Accueil</a>
-            <a href="/CookinCrew/inscription">Inscription</a>
-            <a href="/CookinCrew/connexion">Connexion</a>
-            <a href="/CookinCrew/deconnexion">Déconnexion</a>
-            <a href="/CookinCrew/admin">Admin</a>
+        <nav class="nav-container">
+            <div class="side-nav">
+                <div class="menu-nav">
+                    <h1>{{ h1 }}</h1>
+                    <a href="/CookinCrew/">Accueil</a>
+                    <a href="/CookinCrew/inscription">Inscription</a>
+                    <a href="/CookinCrew/connexion">Connexion</a>
+                    <a href="/CookinCrew/deconnexion">Déconnexion</a>
+                    <a href="/CookinCrew/admin">Admin</a>
+                </div>
+                <div class="user-nav">
+                    {% if isConnected %}
+                        <p><strong>{{ username }}</strong>.</p>
+                    {% else %}
+                        <p>User</p>
+                    {% endif %}
+                </div>
+            </div>
         </nav>
 
         <div class="message-container">
             {% if isConnected %}
-                <p>Connecté en tant que <strong>{{ username }}</strong>.</p>
-
-                <h2>Poster un nouveau message</h2>
                 <section class="post-section">
                     <form class="messageContainer" method="POST" action="" enctype="multipart/form-data">
                         <input type="text" name="titre" id="titre" required class="post post-title" placeholder="Titre"></input>
