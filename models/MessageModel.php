@@ -28,15 +28,15 @@ class MessageModel extends Model
     }
 
     public function getAllMessages(): array
-    {
-        $stmt = $this->db->query("
-            SELECT m.*, u.username
-            FROM {$this->table} m
-            JOIN users u ON m.utilisateur_id = u.id
-            ORDER BY m.date_poste DESC
-        ");
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
-    }
+{
+    $stmt = $this->db->query("
+        SELECT m.*,
+               (SELECT COUNT(*) FROM likes WHERE post_id = m.id) AS like_count
+        FROM {$this->table} m
+        ORDER BY m.date_poste DESC
+    ");
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
 
     public function getMessageById(int $id)
     {
@@ -46,4 +46,19 @@ class MessageModel extends Model
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
+
+    public function getMostLikedPosts(int $limit = 5): array
+{
+    $stmt = $this->db->prepare("
+        SELECT m.*,
+               (SELECT COUNT(*) FROM likes l WHERE l.post_id = m.id) AS like_count
+        FROM messages m
+        ORDER BY like_count DESC
+        LIMIT :limit
+    ");
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
 }

@@ -65,7 +65,16 @@
                             </div>
                         {% endif %}
                         <div class="footer-post">
-                        <i class="fa-regular fa-heart"></i>
+                         {% if msg.userHasLiked %}
+                            <form method="POST" action="/CookinCrew/messages/{{ msg.id }}/unlike">
+                                <button type="submit" class="like-btn"><i class="fa-regular fa-heart"></i></button>
+                            </form>
+                        {% else %}
+                            <form method="POST" action="/CookinCrew/messages/{{ msg.id }}/like">
+                                <button type="submit" class="like-btn"><i class="fa-solid fa-heart" style="color: #e82153;"></i></button>
+                            </form>
+                        {% endif %}
+
                         <i class="fa-regular fa-comments"></i>
                         <i class="fa-solid fa-share"></i>
                         </div>
@@ -76,6 +85,13 @@
                     <p>Aucun message pour le moment.</p>
                 {% endif %}
             </section>
+            <h2>Top 5 des posts</h2>
+            <div>
+                {% for msg in topMessages %}
+                    <h4>{{ msg.titre }} ({{ msg.like_count }} likes)</h4>
+                {% endfor %}
+            </div>
+
         </div>
     </div>
 </body>

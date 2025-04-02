@@ -226,3 +226,12 @@ a {
 /* .message-card:hover {
   transform: scale(1.05);
 } */
+
+button {
+  background: transparent;
+  border: none;
+}
+
+button i {
+  cursor: pointer;
+}

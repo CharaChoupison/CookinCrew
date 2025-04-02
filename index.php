@@ -67,6 +67,19 @@ $router->map('GET', '/deconnexion', function(){
     $userController->logout();
 });
 
+$router->map('POST', '/messages/[i:postId]/like', function ($postId) {
+    $db = \Database\Database::getInstance();
+    $likeCtrl = new \Controllers\LikeController($db);
+    $likeCtrl->toggleLike($postId);
+});
+$router->map('POST', '/messages/[i:postId]/unlike', function ($postId) {
+    $db = \Database\Database::getInstance();
+    $likeCtrl = new \Controllers\LikeController($db);
+    $likeCtrl->unlike($postId);
+});
+
+
+
 /** 
  * MATCHER
  */
